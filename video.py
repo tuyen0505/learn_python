@@ -1,6 +1,6 @@
 # import
-from os import system
-from turtle import delay
+import subprocess as sp
+import time
 
 # atributions class:
 class Video:
@@ -113,6 +113,23 @@ def print_playlists(playlists):
         print("____________ playlist " + str(i + 1) + "___________" )
         print_playlist(playlists[i])
 
+# play a playlist:
+def print_list_playlists(playlists):
+    print(f"__selection index of playlist (1, {len(playlists)})___")
+    for i in range(len(playlists)):
+        print(f"playlist {i + 1}: {playlists[i].name}")
+    return selestion_a_range("selection playlists of you: ", 1, len(playlists))
+
+def print_videos_playlists(videos):
+    print(f"___selection index of videos (1, {len(videos)})___")
+    for i in range(len(videos)):
+        print(f"video {i + 1}: {videos[i].title}")
+    return selestion_a_range("enter idx videos: ", 1, len(videos))
+
+def play_a_playlist(link):
+    print(link)
+    chill = sp.Popen(["C:\Program Files\Google\Chrome\Application\chrome.exe", link])
+
 # show menu:
 def show_menu():
         print("________________________________")
@@ -125,12 +142,18 @@ def show_menu():
         print("Opption 7: save and exit playlist")
         print("_________________________________")    
 
+# selection in range:
+def selestion_a_range(prompt, min, max):
+    choice = input(prompt)
+    while not choice.isdigit() or int(choice) < min or int(choice) > max:
+        choice = input(prompt)
+    return int(choice)
+
 
 def main():
 
     while True:
-        # system("cls")
-        
+
         try :
             playlists = read_playlist_txt()
             print("Loaded Data Successfully !!!!")
@@ -139,15 +162,18 @@ def main():
         
         show_menu()
 
-        selection = int(input("selection enter of you: "))
+        selection = selestion_a_range("enter selestion a range (1, 7): ", 1, 7)
 
         if selection == 1:
             playlists = create_playlist()
             write_playlists(playlists)
         elif selection == 2:
             print_playlists(playlists)
-        # elif selection == 3:
-        #     play_a_playlist()
+            time.sleep(10)
+        elif selection == 3:
+            idx_playlist = print_list_playlists(playlists) - 1
+            idx_videos = print_videos_playlists(playlists[idx_playlist].videos) - 1
+            play_a_playlist(playlists[idx_playlist].videos[idx_videos].link)
         # elif selection == 4:
         #     add_a_playlist()
         # elif selection == 5:
@@ -160,6 +186,6 @@ def main():
         else :
             print("wrong input, exit")
             break
-        
+
 
 main()  
