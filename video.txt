@@ -1,4 +1,4 @@
-2
+3
 son tung
 youtube
 1
@@ -13,3 +13,9 @@ youtube
 1
 chi mot dem thoi
 https://youtu.be/u4ef-54J4Js
+tuyen
+10d
+dac biet
+1
+ngay dau tien
+https://youtu.be/rIXhXaQ8tiM

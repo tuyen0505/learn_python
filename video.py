@@ -1,12 +1,15 @@
 # import
-import subprocess as sp
+import webbrowser as wb
 import time
 
 # atributions class:
+
 class Video:
     def __init__(self, title, link):
         self.title = title
         self.link = link
+    def open(self):
+        wb.open(self.link)
 
 class Playlist(Video):
     def __init__(self, name, description, rating, videos):
@@ -16,6 +19,7 @@ class Playlist(Video):
         self.videos = videos
         
 # create video
+
 def create_videos():
     number_video = int(input("number video:"))
     list_video = []
@@ -28,6 +32,7 @@ def create_videos():
     return list_video
 
 # output video
+
 def print_videos(videos):
     print("______________ read videos ______________")
     for i in range(len(videos)):
@@ -36,6 +41,7 @@ def print_videos(videos):
         print("video url:" + videos[i].link)
 
 # write the video
+
 def write(video, f):
     f.write(video.title + "\n")
     f.write(video.link + "\n")
@@ -46,6 +52,7 @@ def write_videos(videos, f):
         write(i, f)
 
 #read_video_txt
+
 def read_video_txt(f):
     title = f.readline().replace("\n", "")
     link = f.readline().replace("\n", "")
@@ -60,6 +67,7 @@ def read_videos_txt(f):
     return videos_txt
 
 # create playlist:
+
 def create_playlist():
     list_playists = []
     number_playlist = int(input("enter the number of playlists: "))
@@ -71,6 +79,7 @@ def create_playlist():
         playlist = Playlist(name, description, rating, videos)
         list_playists.append(playlist)
     return list_playists
+
 # write playlists:
 
 def write_playlist(playlist, f):
@@ -87,6 +96,7 @@ def write_playlists(playlists):
             write_playlist(playlists[i], f)
 
 # read playlist:
+
 def read_playlist_txt():
     list_playlists = []
     with open("video.txt", "r") as f:
@@ -114,6 +124,7 @@ def print_playlists(playlists):
         print_playlist(playlists[i])
 
 # play a playlist:
+
 def print_list_playlists(playlists):
     print(f"__selection index of playlist (1, {len(playlists)})___")
     for i in range(len(playlists)):
@@ -126,23 +137,54 @@ def print_videos_playlists(videos):
         print(f"video {i + 1}: {videos[i].title}")
     return selestion_a_range("enter idx videos: ", 1, len(videos))
 
-def play_a_playlist(link):
-    print(link)
-    chill = sp.Popen(["C:\Program Files\Google\Chrome\Application\chrome.exe", link])
+def play_a_playlist(playlists):
+    idx_playlist = print_list_playlists(playlists) - 1
+    idx_videos = print_videos_playlists(playlists[idx_playlist].videos) - 1
+    print("open music: " + playlists[idx_playlist].videos[idx_videos].title)
+    playlists[idx_playlist].videos[idx_videos].open()
+    print("played a music successfully!!!!!")
+
+# add a playlist:
+
+def add_a_playlist(playlists):
+    print("______________add a playlist ______________")
+    playlist_new = create_a_playlist()
+    playlists.append(playlist_new)
+    return playlists
+
+def create_a_playlist():
+    name = input("enter name:")
+    description = input("enter description:")
+    rating = input("enter rating (1-5):")
+    videos = create_videos()
+    playlist = Playlist(name, description, rating, videos)
+    return playlist
+
+# update playlists:
+
+# delete playlists:
+
+def delete_playlist(playlists):
+    idx_delete = print_list_playlists(playlists) - 1
+    playlists.pop(idx_delete)
+    print("Deleted successfully!!!!!")
+    return playlists
 
 # show menu:
+
 def show_menu():
-        print("________________________________")
-        print("Opption 1: Create playlist")
-        print("Opption 2: Show playlist")
-        print("Opption 3: Play a playlist")
-        print("Opption 4: Add a playlist")
-        print("Opption 5: Update playlist")
-        print("Opption 6: Delete playlist")
-        print("Opption 7: save and exit playlist")
-        print("_________________________________")    
+        print("______________________________________")
+        print("---  Opption 1: Create playlist    ---")
+        print("---  Opption 2: Show playlist      ---")
+        print("---  Opption 3: Play a playlist    ---")
+        print("---  Opption 4: Add a playlist     ---")
+        print("---  Opption 5: Update playlist    ---")
+        print("---  Opption 6: Delete playlist    ---")
+        print("---  Opption 7: Exit playlist      ---")
+        print("______________________________________")    
 
 # selection in range:
+
 def selestion_a_range(prompt, min, max):
     choice = input(prompt)
     while not choice.isdigit() or int(choice) < min or int(choice) > max:
@@ -155,7 +197,9 @@ def main():
     while True:
 
         try :
+            
             playlists = read_playlist_txt()
+            print("-----------------------------")
             print("Loaded Data Successfully !!!!")
         except :
             print("playlists none!")
@@ -169,17 +213,16 @@ def main():
             write_playlists(playlists)
         elif selection == 2:
             print_playlists(playlists)
-            time.sleep(10)
         elif selection == 3:
-            idx_playlist = print_list_playlists(playlists) - 1
-            idx_videos = print_videos_playlists(playlists[idx_playlist].videos) - 1
-            play_a_playlist(playlists[idx_playlist].videos[idx_videos].link)
-        # elif selection == 4:
-        #     add_a_playlist()
+            play_a_playlist(playlists)
+        elif selection == 4:
+            playlists = add_a_playlist(playlists)
+            write_playlists(playlists)
         # elif selection == 5:
         #     update_playlist()
-        # elif selection == 6:
-        #     delete_playlist()
+        elif selection == 6:
+            playlists = delete_playlist(playlists)
+            write_playlists(playlists)
         elif selection == 7:
             print("successfully write add playlist!")
             break
