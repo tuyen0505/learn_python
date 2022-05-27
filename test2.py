@@ -1,2 +1,3 @@
-import pandas as p
-print(dir(p))
+import random
+
+print(random.randrange(0, 20))
